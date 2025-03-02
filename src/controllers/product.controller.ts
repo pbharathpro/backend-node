@@ -19,7 +19,6 @@ export class ProductController {
     try {
       const productId: string = req.params.id;
       const findOneProductData: Product = await this.product.findProductById(productId);
-
       res.status(200).json({ data: findOneProductData, message: 'Product retrieved successfully' });
     } catch (error) {
       next(error); 
@@ -30,9 +29,8 @@ export class ProductController {
     try {
       const productData: Product = req.body;
       const createProductData: Product = await this.product.createProduct(productData);
-
       res.status(201).json({ data: createProductData, message: 'Product created successfully' });
-    } catch (error) {
+    } catch (error){
       next(error); 
     }
   };
@@ -42,7 +40,6 @@ export class ProductController {
       const productId: string = req.params.id;
       const productData: Product = req.body;
       const updateProductData: Product = await this.product.updateProduct(productId, productData);
-
       res.status(200).json({ data: updateProductData, message: 'Product updated successfully' });
     } catch (error) {
       next(error); 
@@ -53,7 +50,6 @@ export class ProductController {
     try {
       const productId: string = req.params.id;
       const deleteProductData: Product = await this.product.deleteProduct(productId);
-
       res.status(200).json({ data: deleteProductData, message: 'Product deleted successfully' });
     } catch (error) {
       next(error); 

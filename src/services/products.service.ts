@@ -20,6 +20,8 @@ export class ProductService {
 
   // Create a new product
   public async createProduct(productData: Product): Promise<Product> {
+    const findProduct: Product = await ProductModel.findOne({ productName: productData.productName});
+    if (findProduct) throw new HttpException(409, "Product Already exist");
     const createProductData: Product = await ProductModel.create({ ...productData });
 
     return createProductData;
