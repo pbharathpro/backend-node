@@ -2,13 +2,46 @@ import { Service } from 'typedi';
 import { HttpException } from '@exceptions/httpException';
 import { Product } from '@interfaces/products.interface';
 import { ProductModel } from '@models/products.model';
+import { ProductFilters } from '@/interfaces/productFilters.interface';
 
 @Service()
 export class ProductService {
-  public async findAllProduct(): Promise<Product[]> {
-    const products: Product[] = await ProductModel.find();
-    return products;
+  public async findAllProduct(filters: ProductFilters): Promise<Product[]> {
+    const query: any = {};
+
+    // Apply filters if provided
+    if (filters.category) {
+      query.category = filters.category;
+    }
+
+    if (filters.minPrice && !isNaN(Number(filters.minPrice))) {
+      query.price = query.price || {};
+      query.price.$gte = parseFloat(filters.minPrice);
+    }
+
+    if (filters.maxPrice && !isNaN(Number(filters.maxPrice))) {
+      query.price = query.price || {};
+      query.price.$lte = parseFloat(filters.maxPrice);
+    }
+
+    if (filters.isActive === "true" || filters.isActive === "false") {
+      query.isActive = filters.isActive === "true";
+    }
+
+    // Sorting logic
+    const validSortFields = ["price"]; // Only allow sorting by price
+    const sort: any = {};
+    
+    if (filters.sortBy && validSortFields.includes(filters.sortBy)) {
+      const sortDirection = filters.order === "desc" ? -1 : 1;
+      sort[filters.sortBy] = sortDirection;
+    } else {
+      sort["price"] = 1; // Default sorting by lowest price
+    }
+
+    return await ProductModel.find(query).sort(sort);
   }
+
 
   // Find a product by its ID
   public async findProductById(productId: string): Promise<Product> {

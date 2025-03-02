@@ -8,10 +8,11 @@ export class ProductController {
 
   public getAllProducts = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllProductData: Product[] = await this.product.findAllProduct();
+      const filters = req.query;
+      const findAllProductData: Product[] = await this.product.findAllProduct(filters);
       res.status(200).json({ data: findAllProductData, message: 'Products retrieved successfully' });
     } catch (error) {
-      next(error); 
+      next(error);
     }
   };
 
