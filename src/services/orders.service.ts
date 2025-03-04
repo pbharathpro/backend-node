@@ -23,6 +23,7 @@ export class OrderService {
   // Create order
   public async createOrder(orderData: Order): Promise<Order> {
     const product = await ProductModel.findById(orderData.productId);
+    console.log(product);
     if (!product) throw new HttpException(404, "Product not found");
   
     if (product.quantity < 0) throw new HttpException(400, "Product is out of stock");

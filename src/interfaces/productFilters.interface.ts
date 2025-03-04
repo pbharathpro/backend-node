@@ -5,4 +5,5 @@ export interface ProductFilters {
   isActive?: string;
   sortBy?: string;
   order?: 'asc' | 'desc';
+  searchTerm?: string;
 }
